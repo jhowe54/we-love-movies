@@ -1,11 +1,9 @@
-
 const service = require("./reviews.service.js");
 
 const VALID_PROPERTIES = ["score", "content"];
 
 async function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
-  console.log("BODY", data);
   const invalidFields = Object.keys(data).filter((field) => {
     return !VALID_PROPERTIES.includes(field);
   });
@@ -25,11 +23,6 @@ async function reviewExists(req, res, next) {
     return next();
   }
   next({ status: 404, message: "cannot be found" });
-}
-
-async function list(req, res) {
-  const data = await service.list();
-  res.json({ data });
 }
 
 async function update(req, res) {
@@ -54,8 +47,23 @@ async function destroy(req, res) {
   res.sendStatus(204);
 }
 
+async function listReviews(req, res) {
+  const movieReviews = await service.listReviews(res.locals.movie.movie_id);
+  const updatedReviewStructure = [];
+  movieReviews.map((rev) => {
+    restructuredEntry = {
+      movie_id: rev.movie_id,
+      ...rev,
+      critic: rev.critic[0],
+    };
+    updatedReviewStructure.push(restructuredEntry);
+  });
+  res.json({ data: updatedReviewStructure });
+}
+
 module.exports = {
   update: [reviewExists, hasOnlyValidProperties, update],
   delete: [reviewExists, destroy],
-  list,
+
+  listReviews,
 };

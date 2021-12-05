@@ -4,7 +4,7 @@ const { addCriticCategory } = require("../movies/movies.service");
 const tableName = "theaters";
 const reduceProperties = require("../utils/reduce-properties");
 
-const addCategory = reduceProperties("movie_id", {
+const addCategory = reduceProperties("theater_id", {
   movie_id: ["movies", null, "movie_id"],
   title: ["movies", null, "title"],
   rating: ["movies", null, "rating"],
@@ -16,24 +16,13 @@ const addCategory = reduceProperties("movie_id", {
   runtime_in_minutes: ["movies", null, "runtime_in_minutes"],
 });
 
-
-
-function getMoviesAtTheaters() {
-    return knex("movies_theaters").select("*").then(addCategory)
-}
-
-function getMovies() {
-    return knex("movies").select("*")
-}
-
-
 function list() {
-  return knex("theaters").select("*")
-
+  return knex("theaters as t")
+    .join("movies_theaters as mt", "mt.theater_id", "t.theater_id")
+    .join("movies as m", "m.movie_id", "mt.movie_id")
+    .then(addCategory);
 }
 
 module.exports = {
   list,
-  getMovies,
-  getMoviesAtTheaters
 };
