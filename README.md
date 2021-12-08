@@ -1,6 +1,5 @@
-# we-love-movies
+# we-love-movies - backend
 
-## Backend server
 Provides the user with movie and theater information, including movie summaries, critic reviews, and movies currently playing at theaters.
 
 Note:
