@@ -1,4 +1,4 @@
-# we-love-movies - backend
+# WeLoveMovies - backend
 
 Provides the user with movie and theater information, including movie summaries, critic reviews, and movies currently playing at theaters.
 
